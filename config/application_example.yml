@@ -1,0 +1,26 @@
+server:
+  port: 1016
+datasource:
+  username: root
+  password: "123456"
+  url: localhost
+  port: 3306
+  dbname: FakeIns
+  charset: utf8mb4
+  loc: Asia/Shanghai
+emailservice:
+  host: smtp.163.com
+  port: :25
+  username: 1234567xxx@163.com
+  password: xxxxxx
+redisconfig:
+  host: localhost:6379
+  network: tcp
+  conneters: 10
+  encodesec: 13214
+  password: 
+qiniu:
+  domain: http://pic.domain.com/
+  accessKey: xxxxx
+  secreKey: xxxxxxx
+  bucket: xxxx

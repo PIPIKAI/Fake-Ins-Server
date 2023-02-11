@@ -1,0 +1,753 @@
+basePath: /api/v1
+definitions:
+  accountservice.AttemptForm:
+    properties:
+      emailorphone:
+        example: 1652091948@qq.com
+        type: string
+      name:
+        example: 志明
+        type: string
+      password:
+        example: "123456"
+        type: string
+      username:
+        example: zzk
+        type: string
+    required:
+    - emailorphone
+    - name
+    - password
+    - username
+    type: object
+  accountservice.EditForm:
+    properties:
+      bio:
+        example: my bio
+        type: string
+      birth_day:
+        example: "2022-12-12"
+        type: string
+      gender:
+        example: mele
+        type: string
+      name:
+        example: 志明
+        type: string
+      photo_base64:
+        type: string
+      photourl:
+        type: string
+      user_name:
+        example: zzk
+        type: string
+      website:
+        example: https://example.com
+        type: string
+    type: object
+  accountservice.LoginForm:
+    properties:
+      emailorphoneorusername:
+        example: zzk
+        type: string
+      password:
+        example: "123456"
+        type: string
+    required:
+    - emailorphoneorusername
+    - password
+    type: object
+  accountservice.RegisterForm:
+    properties:
+      birth_day:
+        example: "2022-12-12"
+        type: string
+      code:
+        example: "1234"
+        type: string
+      emailorphone:
+        example: 1652091948@qq.com
+        type: string
+      name:
+        example: 志明
+        type: string
+      password:
+        example: "123456"
+        type: string
+      username:
+        example: zzk
+        type: string
+    required:
+    - emailorphone
+    - name
+    - password
+    - username
+    type: object
+  commentservice.Comment:
+    properties:
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      likesCounts:
+        type: integer
+      postID:
+        type: integer
+      replyID:
+        type: integer
+      replys:
+        items:
+          $ref: '#/definitions/commentservice.Comment'
+        type: array
+      replysCounts:
+        type: integer
+      userID:
+        type: integer
+    type: object
+  postservice.CreatePostForm:
+    properties:
+      categorys:
+        example:
+        - example
+        - test
+        items:
+          type: string
+        type: array
+      mycomment:
+        example: 我的评论
+        type: string
+      pictures:
+        example:
+        - http://pic.kiass.top/1660055054189wallhaven-rd2jw1_1920x1080.png
+        - http://pic.kiass.top/1660055054194wallhaven-x8eydz.jpg
+        items:
+          type: string
+        type: array
+      place:
+        example: school
+        type: string
+    type: object
+  postservice.EditPostForm:
+    properties:
+      categorys:
+        items:
+          type: string
+        type: array
+      mycomment:
+        type: string
+      place:
+        type: string
+    type: object
+host: localhost:1016
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Fake Ins的API文档
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Fake Ins API
+  version: "1.0"
+paths:
+  /comment/get:
+    get:
+      consumes:
+      - application/json
+      description: 获取评论
+      parameters:
+      - description: PID
+        in: query
+        name: postid
+        type: integer
+      - description: page
+        in: query
+        name: page
+        type: integer
+      - description: page_size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 获取评论
+      tags:
+      - Comment
+  /comment/post:
+    post:
+      consumes:
+      - application/json
+      description: 评论帖子
+      parameters:
+      - description: Comment
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/commentservice.Comment'
+      - description: UID
+        in: query
+        name: uid
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 评论帖子
+      tags:
+      - Comment
+  /comment/reply:
+    post:
+      consumes:
+      - application/json
+      description: 评论回复
+      parameters:
+      - description: Comment
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/commentservice.Comment'
+      - description: UID
+        in: query
+        name: uid
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 评论回复
+      tags:
+      - Comment
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: 登录
+      parameters:
+      - description: LoginForm
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/accountservice.LoginForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Login
+      tags:
+      - Account
+  /post/create:
+    post:
+      consumes:
+      - application/json
+      description: Create
+      parameters:
+      - description: CreatePostForm
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/postservice.CreatePostForm'
+      - description: UID
+        in: query
+        name: uid
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 创建帖子
+      tags:
+      - Post
+  /post/delete/{postid}:
+    delete:
+      consumes:
+      - application/json
+      description: 删除一个帖子
+      parameters:
+      - description: postid
+        in: path
+        name: postid
+        required: true
+        type: integer
+      - description: uid
+        in: query
+        name: uid
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: DeleteByPostID
+      tags:
+      - Post
+  /post/edit/{postid}:
+    put:
+      consumes:
+      - application/json
+      description: 编辑一个帖子
+      parameters:
+      - description: EditPostForm
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/postservice.EditPostForm'
+      - description: postid
+        in: path
+        name: postid
+        required: true
+        type: integer
+      - description: UID
+        in: query
+        name: uid
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: EditByPostID
+      tags:
+      - Post
+  /post/get/home:
+    post:
+      consumes:
+      - application/json
+      description: GetWaths
+      parameters:
+      - description: page
+        in: query
+        name: page
+        type: integer
+      - description: page_size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 获得该用户关注的用户所有的帖子
+      tags:
+      - Post
+  /post/getby/postid/{postid}:
+    post:
+      consumes:
+      - application/json
+      description: GetByPostID
+      parameters:
+      - description: postid
+        in: path
+        name: postid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: GetByPostID
+      tags:
+      - Post
+  /post/getby/uid/{uid}:
+    post:
+      consumes:
+      - application/json
+      description: GetByUser
+      parameters:
+      - description: uid
+        in: path
+        name: uid
+        required: true
+        type: integer
+      - description: page
+        in: query
+        name: page
+        type: integer
+      - description: page_size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 获得该用户的所有帖子
+      tags:
+      - Post
+  /post/like:
+    post:
+      consumes:
+      - application/json
+      description: LikePost
+      parameters:
+      - description: ownerid
+        in: query
+        name: ownerid
+        required: true
+        type: string
+      - description: 类型
+        in: query
+        name: owner_type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 点赞一个帖子
+      tags:
+      - Post
+  /post/likedornot:
+    post:
+      consumes:
+      - application/json
+      description: LikedOrNot
+      parameters:
+      - description: ownerid
+        in: query
+        name: ownerid
+        required: true
+        type: string
+      - description: 类型
+        in: query
+        name: owner_type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 点赞是否存在
+      tags:
+      - Post
+  /post/undolike:
+    delete:
+      consumes:
+      - application/json
+      description: UndoLike
+      parameters:
+      - description: ownerid
+        in: query
+        name: ownerid
+        required: true
+        type: integer
+      - description: owner_type
+        in: query
+        name: owner_type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 取消点赞一个帖子
+      tags:
+      - Post
+  /register/attempt:
+    post:
+      consumes:
+      - application/json
+      description: 验证注册表单
+      parameters:
+      - description: AttemptForm
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/accountservice.AttemptForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Attempt
+      tags:
+      - Account
+  /register/register:
+    post:
+      consumes:
+      - application/json
+      description: 注册用户
+      parameters:
+      - description: RegisterForm
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/accountservice.RegisterForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Register
+      tags:
+      - Account
+  /register/sendmailcode:
+    post:
+      consumes:
+      - application/json
+      description: 发送邮件
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: PostEmail
+      tags:
+      - Account
+  /user/bewatchedornot:
+    post:
+      consumes:
+      - application/json
+      description: BeWatchedOrNot
+      parameters:
+      - description: uid
+        in: query
+        name: uid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 是否关注
+      tags:
+      - User
+  /user/getby/uid/{uid}:
+    post:
+      consumes:
+      - application/json
+      description: 获取用户信息
+      parameters:
+      - description: uid
+        in: path
+        name: uid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: GetByID
+      tags:
+      - User
+  /user/getby/username/{username}:
+    post:
+      consumes:
+      - application/json
+      description: 获取用户信息
+      parameters:
+      - description: username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: GetByUserName
+      tags:
+      - User
+  /user/getfans:
+    post:
+      consumes:
+      - application/json
+      description: 获取粉丝列表
+      parameters:
+      - description: page
+        in: query
+        name: page
+        type: integer
+      - description: page_size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 获取粉丝列表
+      tags:
+      - User
+  /user/info:
+    post:
+      description: 获取用户登录信息
+      parameters:
+      - description: info
+        in: header
+        name: info
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: Info
+      tags:
+      - User
+    put:
+      description: 获取用户登录信息
+      parameters:
+      - description: EditForm
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/accountservice.EditForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Info
+      tags:
+      - User
+  /user/logout:
+    post:
+      consumes:
+      - application/json
+      description: 登出
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Logout
+      tags:
+      - Account
+  /user/unwatch/{uid}:
+    post:
+      consumes:
+      - application/json
+      description: 取关用户
+      parameters:
+      - description: uid
+        in: path
+        name: uid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: UnWatchUser
+      tags:
+      - User
+  /user/unwatchedusers:
+    post:
+      consumes:
+      - application/json
+      description: 没关注的用户
+      parameters:
+      - description: page
+        in: query
+        name: page
+        type: integer
+      - description: page_size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: UnWatchedUsers
+      tags:
+      - User
+  /user/watch/{uid}:
+    post:
+      consumes:
+      - application/json
+      description: 关注用户
+      parameters:
+      - description: uid
+        in: path
+        name: uid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: WatchUser
+      tags:
+      - User
+  /user/watchedornot:
+    post:
+      consumes:
+      - application/json
+      description: WatchedOrNot
+      parameters:
+      - description: uid
+        in: query
+        name: uid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 是否关注
+      tags:
+      - User
+  /user/watchedusers:
+    post:
+      consumes:
+      - application/json
+      description: HadWatchedUsers
+      parameters:
+      - description: page
+        in: query
+        name: page
+        type: integer
+      - description: page_size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 已经关注的用户
+      tags:
+      - User
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Cookie
+    type: apiKey
+swagger: "2.0"
