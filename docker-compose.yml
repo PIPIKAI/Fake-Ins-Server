@@ -1,0 +1,23 @@
+version: '2'
+services:
+
+    # our web application
+    app:
+        build:
+            context: ./
+            dockerfile: server.dockerfile
+        volumes:
+            - ./:/app
+        ports:
+          - 1016:1016
+
+
+    database:
+      image: mysql:8.0
+      environment:
+        - "MYSQL_ROOT_PASSWORD=123456"
+        - "MYSQL_DATABASE=FakeIns"
+        - "MYSQL_USER=homestead"
+        - "MYSQL_PASSWORD=secret"
+    redis:
+      image: redis:5
