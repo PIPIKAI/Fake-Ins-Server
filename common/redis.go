@@ -2,6 +2,7 @@ package common
 
 import (
 	"log"
+	"time"
 
 	"github.com/gin-contrib/sessions/redis"
 	"github.com/spf13/viper"
@@ -15,13 +16,19 @@ func InitRedis() redis.Store {
 	conneters := viper.GetInt("redisconfig.conneters")
 	encodePassword := viper.GetString("redisconfig.network")
 	password := viper.GetString("redisconfig.password")
-
-	thestore, err := redis.NewStore(conneters, network, host, password, []byte(encodePassword))
-	if err != nil {
-		panic("redis 连接失败")
-	} else {
-		log.Println("redis 连接成功")
+	var thestore redis.Store
+	var err error
+	for {
+		thestore, err = redis.NewStore(conneters, network, host, password, []byte(encodePassword))
+		if err != nil {
+			log.Println("[warn]: redis 连接失败 5s后尝试重新连接")
+			time.Sleep(5 * time.Second)
+		} else {
+			log.Println("redis 连接成功")
+			break
+		}
 	}
+
 	store = thestore
 	return store
 }
