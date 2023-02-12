@@ -220,8 +220,9 @@ func (c AccountService) Login(ctx *gin.Context) {
 	// 发放token
 	authsession := sessions.DefaultMany(ctx, "info")
 	authsession.Options(sessions.Options{
-		Secure: true,
-		MaxAge: 3600 * 7 * 24,
+		MaxAge:   3600 * 7 * 24,
+		Secure:   true,
+		SameSite: 4,
 	})
 
 	user.PassWord = ""
