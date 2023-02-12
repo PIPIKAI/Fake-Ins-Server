@@ -81,7 +81,8 @@ func (c AccountService) Register(ctx *gin.Context) {
 
 	session.Delete("email")
 	session.Options(sessions.Options{
-		MaxAge: -1,
+		MaxAge:   -1,
+		SameSite: 4,
 	})
 	session.Delete(email)
 	session.Save()
@@ -90,7 +91,8 @@ func (c AccountService) Register(ctx *gin.Context) {
 	authsession := sessions.DefaultMany(ctx, "info")
 	defer authsession.Save()
 	authsession.Options(sessions.Options{
-		MaxAge: 3600 * 24 * 7,
+		MaxAge:   3600 * 24 * 7,
+		SameSite: 4,
 	})
 	user.PassWord = ""
 	if userinfo, err := json.Marshal(user); err != nil {
@@ -144,7 +146,8 @@ func (c AccountService) PostEmail(ctx *gin.Context) {
 	// 使用session
 	// 设置session 的过期时间
 	session.Options(sessions.Options{
-		MaxAge: 60 * 5,
+		MaxAge:   60 * 5,
+		SameSite: 4,
 	})
 	// 设置session
 	session.Set(email, code)
@@ -177,7 +180,8 @@ func (c AccountService) Attempt(ctx *gin.Context) {
 	session := sessions.DefaultMany(ctx, "mid")
 	// 设置session 的过期时间
 	session.Options(sessions.Options{
-		MaxAge: 60 * 10,
+		MaxAge:   60 * 10,
+		SameSite: 4,
 	})
 
 	// 设置session
@@ -238,7 +242,8 @@ func (c AccountService) Logout(ctx *gin.Context) {
 	session := sessions.DefaultMany(ctx, "info")
 	session.Delete("user")
 	session.Options(sessions.Options{
-		MaxAge: -1,
+		MaxAge:   -1,
+		SameSite: 4,
 	})
 	session.Save()
 	c.ResSuccess(ctx, nil, "注销成功")
