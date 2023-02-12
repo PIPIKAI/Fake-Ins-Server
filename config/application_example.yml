@@ -8,7 +8,7 @@ server:
   jwtkey: jwtkey
 cors:
 # 跨域允许的源站
-  origin-host: http://xxx.com
+  allowhost: http://xxx.com
 datasource:
   username: root
   password: "123456"
