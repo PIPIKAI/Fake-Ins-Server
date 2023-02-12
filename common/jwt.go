@@ -4,12 +4,13 @@ import (
 	"time"
 
 	"github.com/PIPIKAI/Ins-gin-vue/server/model"
+	"github.com/spf13/viper"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
 // Jwt 加密密钥
-var jwtKey = []byte("theJwtKeyyy")
+var jwtKey = []byte(viper.GetString("server.jwtkey"))
 
 type Claims struct {
 	UserID uint

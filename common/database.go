@@ -46,7 +46,7 @@ func InitDB() *gorm.DB {
 			log.Println("[warn]: 链接数据库失败 5s后尝试重新连接")
 			time.Sleep(5 * time.Second)
 		} else {
-			log.Println("数据库 连接成功")
+			log.Println("链接数据库成功！")
 			break
 		}
 	}
@@ -54,12 +54,11 @@ func InitDB() *gorm.DB {
 	// 数据库连接池的设置
 	mysqlDB, _ := db.DB()
 
-	mysqlDB.SetMaxIdleConns(10)  //设置空闲连接池中连接的最大数
-	mysqlDB.SetMaxOpenConns(100) // 数据库连接最大数量
+	mysqlDB.SetMaxIdleConns(viper.GetInt("datasource.maxidleconns"))
+	mysqlDB.SetMaxOpenConns(viper.GetInt("datasource.maxopenconns"))
 
 	mysqlDB.SetConnMaxLifetime(time.Hour) // 设置连接最大可复用时间
 
-	log.Println("链接数据库成功！")
 	db.AutoMigrate(
 		&model.User{},
 		&model.Post{},
