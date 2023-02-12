@@ -83,6 +83,7 @@ func (c AccountService) Register(ctx *gin.Context) {
 	session.Options(sessions.Options{
 		MaxAge:   -1,
 		SameSite: 4,
+		Secure:   true,
 	})
 	session.Delete(email)
 	session.Save()
@@ -92,6 +93,7 @@ func (c AccountService) Register(ctx *gin.Context) {
 	defer authsession.Save()
 	authsession.Options(sessions.Options{
 		MaxAge:   3600 * 24 * 7,
+		Secure:   true,
 		SameSite: 4,
 	})
 	user.PassWord = ""
@@ -147,6 +149,7 @@ func (c AccountService) PostEmail(ctx *gin.Context) {
 	// 设置session 的过期时间
 	session.Options(sessions.Options{
 		MaxAge:   60 * 5,
+		Secure:   true,
 		SameSite: 4,
 	})
 	// 设置session
@@ -181,6 +184,7 @@ func (c AccountService) Attempt(ctx *gin.Context) {
 	// 设置session 的过期时间
 	session.Options(sessions.Options{
 		MaxAge:   60 * 10,
+		Secure:   true,
 		SameSite: 4,
 	})
 
@@ -216,6 +220,7 @@ func (c AccountService) Login(ctx *gin.Context) {
 	// 发放token
 	authsession := sessions.DefaultMany(ctx, "info")
 	authsession.Options(sessions.Options{
+		Secure: true,
 		MaxAge: 3600 * 7 * 24,
 	})
 
@@ -243,6 +248,7 @@ func (c AccountService) Logout(ctx *gin.Context) {
 	session.Delete("user")
 	session.Options(sessions.Options{
 		MaxAge:   -1,
+		Secure:   true,
 		SameSite: 4,
 	})
 	session.Save()
