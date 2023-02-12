@@ -1,5 +1,14 @@
+env:
+# 定义生产环境
+  release: false
 server:
+  host: localhost:1016
+  basepath: /api/v1
   port: 1016
+  jwtkey: jwtkey
+cors:
+# 跨域允许的源站
+  origin-host: http://xxx.com
 datasource:
   username: root
   password: "123456"
@@ -8,19 +17,29 @@ datasource:
   dbname: FakeIns
   charset: utf8mb4
   loc: Asia/Shanghai
+  # 设置空闲连接池中连接的最大数
+  maxidleconns: 10
+  # 数据库连接最大数量
+  maxopenconns: 500
 emailservice:
   host: smtp.163.com
   port: :25
-  username: 1234567xxx@163.com
-  password: xxxxxx
+  username: xxxx@163.com
+  password: xxxxx
 redisconfig:
   host: localhost:6379
   network: tcp
   conneters: 10
-  encodesec: 13214
+  encodesec: jdajc149
   password: 
 qiniu:
-  domain: http://pic.domain.com/
-  accessKey: xxxxx
-  secreKey: xxxxxxx
-  bucket: xxxx
+# qiniu云图库的设置
+  domain: http://xxxxx/
+  accessKey: 
+  secreKey: 
+  bucket: xxx
+swagger:
+# swag 账号密码 仅在生产环境下生效
+  prefix: /api-doc
+  username: root
+  password: 123
