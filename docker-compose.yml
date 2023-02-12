@@ -1,23 +1,26 @@
 version: '2'
 services:
-
-    # our web application
-    app:
-        build:
-            context: ./
-            dockerfile: server.dockerfile
-        volumes:
-            - ./:/app
-        ports:
-          - 1016:1016
-
-
-    database:
-      image: mysql:8.0
-      environment:
-        - "MYSQL_ROOT_PASSWORD=123456"
-        - "MYSQL_DATABASE=FakeIns"
-        - "MYSQL_USER=homestead"
-        - "MYSQL_PASSWORD=secret"
-    redis:
-      image: redis:5
+  app:
+    container_name: docker-fake-ins-server
+    build:
+      context: ./
+      dockerfile: server.dockerfile
+    working_dir: /app
+    ports:
+      - 1016:1016
+    depends_on:
+      - database
+      - redis 
+  database:
+    container_name: mysql
+    image: mysql:8.0
+    environment:
+      - "MYSQL_ROOT_PASSWORD=123456"
+      - "MYSQL_DATABASE=FakeIns"
+    ports:
+      - 3306:3306
+  redis:
+    container_name: redis
+    image: redis:5
+    ports:
+      - 6379:6379

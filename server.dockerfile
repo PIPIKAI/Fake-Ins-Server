@@ -3,8 +3,8 @@ RUN go env -w GO111MODULE=on
 RUN go env -w GOPROXY="https://goproxy.cn"
 RUN mkdir /app
 WORKDIR /app
-ADD . /app/
+ADD  . /app
 RUN go mod tidy
-RUN go build -o app main.go
+RUN  CGO_ENABLED=0 go build -a -o app -ldflags '-extldflags "-static"' .
 RUN chmod +x ./app
 ENTRYPOINT ["./app"]
