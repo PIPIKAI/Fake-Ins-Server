@@ -12,7 +12,9 @@ func UserGroup(group *gin.RouterGroup) *gin.RouterGroup {
 	r.Use(middleware.LoginedMiddleware())
 
 	r.POST("/info", Service.AccountService.Info)
+	r.PUT("/info", Service.AccountService.EditCountInfo)
 	r.POST("/logout", Service.AccountService.Logout)
+	r.POST("/photo", Service.AccountService.ChangePhoto)
 	// r.POST("/commend/users", userService.CommentsUsers)
 	r.POST("/getby/username/:username", userService.GetByUserName)
 	r.POST("/getby/uid/:uid", userService.GetByID)

@@ -31,19 +31,17 @@ definitions:
       gender:
         example: mele
         type: string
+      id:
+        example: 1
+        type: integer
       name:
         example: 志明
-        type: string
-      photo_base64:
-        type: string
-      photourl:
-        type: string
-      user_name:
-        example: zzk
         type: string
       website:
         example: https://example.com
         type: string
+    required:
+    - id
     type: object
   accountservice.LoginForm:
     properties:
@@ -56,6 +54,13 @@ definitions:
     required:
     - emailorphoneorusername
     - password
+    type: object
+  accountservice.PhotoFrom:
+    properties:
+      data_list:
+        items:
+          $ref: '#/definitions/upload.DataList'
+        type: array
     type: object
   accountservice.RegisterForm:
     properties:
@@ -139,6 +144,27 @@ definitions:
         type: string
       place:
         type: string
+    type: object
+  upload.DataList:
+    properties:
+      base64Date:
+        type: string
+      blob:
+        type: string
+      blobData: {}
+      cropedBlobUrl:
+        type: string
+      name:
+        type: string
+      percentage:
+        type: integer
+      raw: {}
+      size:
+        type: integer
+      status:
+        type: string
+      uid:
+        type: integer
     type: object
 host: localhost:1016
 info:
@@ -615,8 +641,12 @@ paths:
       tags:
       - User
     put:
-      description: 获取用户登录信息
+      description: 编辑用户登录信息
       parameters:
+      - description: UID
+        in: query
+        name: uid
+        type: integer
       - description: EditForm
         in: body
         name: form
@@ -644,6 +674,24 @@ paths:
       summary: Logout
       tags:
       - Account
+  /user/photo:
+    put:
+      description: 获取更改头像
+      parameters:
+      - description: PhotoFrom
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/accountservice.PhotoFrom'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Info
+      tags:
+      - User
   /user/unwatch/{uid}:
     post:
       consumes:

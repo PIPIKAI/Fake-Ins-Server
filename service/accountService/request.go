@@ -1,15 +1,12 @@
 package accountservice
 
 import (
-	"encoding/base64"
 	"fmt"
 	"log"
 	"regexp"
-	"strings"
 
 	"github.com/PIPIKAI/Ins-gin-vue/server/common"
 	"github.com/PIPIKAI/Ins-gin-vue/server/model"
-	"github.com/PIPIKAI/Ins-gin-vue/server/util"
 	"github.com/PIPIKAI/Ins-gin-vue/server/util/upload"
 
 	"github.com/gin-gonic/gin"
@@ -37,15 +34,18 @@ type LoginForm struct {
 	EmailOrPhoneOrUsername string `json:"emailorphoneorusername" binding:"required" example:"zzk"`
 }
 
+type PhotoFrom struct {
+	ID       uint              `json:"uid"`
+	DataList []upload.DataList `json:"data_list"`
+}
+
 type EditForm struct {
-	UserName    string `json:"user_name" example:"zzk"`
-	Name        string `json:"name" example:"志明"`
-	PhotoBase64 string `json:"photo_base64"`
-	Photourl    string `json:"photourl"`
-	Website     string `json:"website" example:"https://example.com"`
-	Bio         string `json:"bio" example:"my bio"`
-	Gender      string `json:"gender" example:"mele"`
-	BirthDay    string `json:"birth_day" example:"2022-12-12"`
+	ID       uint   `json:"ID" binding:"required"  example:"1"`
+	Name     string `json:"Name"  example:"志明"`
+	Website  string `json:"Website"  example:"https://example.com"`
+	Bio      string `json:"Bio"  example:"my bio"`
+	Gender   string `json:"Gender"  example:"mele"`
+	BirthDay string `json:"BirthDay"  example:"2022-12-12"`
 }
 
 func validatPE(s string) (phone string, email string) {
@@ -124,25 +124,6 @@ func (c AccountService) ValidataEdit(ctx *gin.Context) (e *EditForm, err error) 
 	if err := ctx.ShouldBind(&catch); err != nil {
 		log.Println("catch", catch)
 		return nil, fmt.Errorf("数据不规范")
-	}
-
-	if catch.UserName != "" {
-		if err := common.GetDB().Model(&model.User{}).First(&model.User{UserName: catch.UserName}).Error; err != nil {
-			return nil, fmt.Errorf("用户名已经存在")
-		}
-	}
-	if catch.PhotoBase64 != "" {
-		tempf := strings.Split(catch.PhotoBase64, ",")
-		file, err := base64.StdEncoding.DecodeString(tempf[len(tempf)-1])
-		if err != nil {
-			return nil, err
-		}
-		qiniu := upload.GetQiniu()
-		url, err := qiniu.Upload(util.NowUnix(), file)
-		if err != nil {
-			return nil, err
-		}
-		catch.Photourl = url
 	}
 	return catch, nil
 }

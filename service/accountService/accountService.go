@@ -12,6 +12,7 @@ import (
 	"github.com/PIPIKAI/Ins-gin-vue/server/model"
 	"github.com/PIPIKAI/Ins-gin-vue/server/util"
 	Email "github.com/PIPIKAI/Ins-gin-vue/server/util/email"
+	"github.com/PIPIKAI/Ins-gin-vue/server/util/upload"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -283,32 +284,72 @@ func (c AccountService) Info(ctx *gin.Context) {
 
 // @Summary     Info
 // @Schemes     http https
-// @Description 获取用户登录信息
+// @Description 编辑用户登录信息
 // @Tags        User
 // @param form body EditForm true "EditForm"
 // @Produce     json
 // @success     200
 // @Router      /user/info [put]
 func (c AccountService) EditCountInfo(ctx *gin.Context) {
-	uid, _ := strconv.Atoi(ctx.Param("uid"))
 	e, err := c.ValidataEdit(ctx)
 	if err != nil {
 		c.ResErr(ctx, "表单错误")
+		return
 	}
-	if err := common.GetDB().Updates(
-		&model.User{
-			ID:       uint(uid),
-			Bio:      e.Bio,
-			BirthDay: e.BirthDay,
-			Photo:    e.Photourl,
-			Website:  e.Website,
-			Gender:   e.Gender,
-			Name:     e.Name,
-			UserName: e.UserName,
-		},
+	if e.ID != c.GetSelfID(ctx) {
+		c.ResErr(ctx, "权限不足")
+		return
+	}
+	user := model.User{ID: uint(e.ID)}
+	db := common.GetDB()
+	db.Find(&user)
+	log.Println("First user: ", user)
+	log.Println("e: ", e)
+	user.Bio = e.Bio
+	user.Name = e.Name
+	user.Website = e.Website
+	user.Gender = e.Gender
+	user.BirthDay = e.BirthDay
+
+	if query := db.Save(&user); query.Error != nil {
+		util.Response.Error(ctx, nil, "更新失败"+"err:"+err.Error())
+		return
+	} else {
+		c.ResSuccess(ctx, nil, "更新成功 "+strconv.Itoa(int(query.RowsAffected))+" Rows Affected")
+
+	}
+
+}
+
+// @Summary     Info
+// @Schemes     http https
+// @Description 获取更改头像
+// @Tags        User
+// @param form body PhotoFrom true "PhotoFrom"
+// @Produce     json
+// @success     200
+// @Router      /user/photo [put]
+func (c AccountService) ChangePhoto(ctx *gin.Context) {
+
+	var catch *PhotoFrom
+	if err := ctx.ShouldBind(&catch); err != nil {
+		log.Println("catch", catch)
+		c.ResErr(ctx, "表单错误")
+		return
+	}
+	if len(catch.DataList) > 1 || len(catch.DataList) <= 0 {
+		c.ResErr(ctx, "表单错误")
+		return
+	}
+	if catch.DataList[0].Base64Date == "" {
+		c.ResErr(ctx, "Base64Date == null")
+		return
+	}
+	Photourl := upload.UploadImages(catch.DataList)
+	if err := common.GetDB().Model(&model.User{ID: catch.ID}).Update(
+		"Photo", Photourl,
 	).Error; err != nil {
-		util.Response.Error(ctx, nil, "更新失败")
-		c.ResErr(ctx, err.Error())
+		util.Response.Error(ctx, nil, "更新失败 err:"+err.Error())
 		return
 	}
 	c.ResSuccess(ctx, nil, "更新成功")

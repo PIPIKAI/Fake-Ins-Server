@@ -7,20 +7,29 @@ services:
       dockerfile: server.dockerfile
     working_dir: /app
     ports:
-      - 1016:1016
+      - 1018:1016
     depends_on:
       - database
       - redis 
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
   database:
     container_name: mysql
     image: mysql:8.0
     environment:
       - "MYSQL_ROOT_PASSWORD=123456"
-      - "MYSQL_DATABASE=FakeIns"
+      - "MYSQL_DATABASE=fakeins"
     ports:
       - 3306:3306
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
   redis:
     container_name: redis
     image: redis:5
     ports:
       - 6379:6379
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone

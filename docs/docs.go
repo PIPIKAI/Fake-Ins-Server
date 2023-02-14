@@ -703,7 +703,7 @@ const docTemplate = `{
         },
         "/user/info": {
             "put": {
-                "description": "获取用户登录信息",
+                "description": "编辑用户登录信息",
                 "produces": [
                     "application/json"
                 ],
@@ -712,6 +712,12 @@ const docTemplate = `{
                 ],
                 "summary": "Info",
                 "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UID",
+                        "name": "uid",
+                        "in": "query"
+                    },
                     {
                         "description": "EditForm",
                         "name": "form",
@@ -770,6 +776,34 @@ const docTemplate = `{
                     "Account"
                 ],
                 "summary": "Logout",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/user/photo": {
+            "put": {
+                "description": "获取更改头像",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Info",
+                "parameters": [
+                    {
+                        "description": "PhotoFrom",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/accountservice.PhotoFrom"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -963,6 +997,9 @@ const docTemplate = `{
         },
         "accountservice.EditForm": {
             "type": "object",
+            "required": [
+                "id"
+            ],
             "properties": {
                 "bio": {
                     "type": "string",
@@ -976,19 +1013,13 @@ const docTemplate = `{
                     "type": "string",
                     "example": "mele"
                 },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
                 "name": {
                     "type": "string",
                     "example": "志明"
-                },
-                "photo_base64": {
-                    "type": "string"
-                },
-                "photourl": {
-                    "type": "string"
-                },
-                "user_name": {
-                    "type": "string",
-                    "example": "zzk"
                 },
                 "website": {
                     "type": "string",
@@ -1010,6 +1041,17 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "example": "123456"
+                }
+            }
+        },
+        "accountservice.PhotoFrom": {
+            "type": "object",
+            "properties": {
+                "data_list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/upload.DataList"
+                    }
                 }
             }
         },
@@ -1130,6 +1172,37 @@ const docTemplate = `{
                 },
                 "place": {
                     "type": "string"
+                }
+            }
+        },
+        "upload.DataList": {
+            "type": "object",
+            "properties": {
+                "base64Date": {
+                    "type": "string"
+                },
+                "blob": {
+                    "type": "string"
+                },
+                "blobData": {},
+                "cropedBlobUrl": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "percentage": {
+                    "type": "integer"
+                },
+                "raw": {},
+                "size": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "uid": {
+                    "type": "integer"
                 }
             }
         }
