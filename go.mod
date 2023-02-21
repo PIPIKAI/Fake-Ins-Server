@@ -7,6 +7,14 @@ require github.com/gin-gonic/gin v1.8.2
 require github.com/gin-contrib/sessions v0.0.5
 
 require (
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/chenyahui/gin-cache v1.8.1 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/go-redis/redis/v8 v8.11.5 // indirect
+	github.com/jellydator/ttlcache/v2 v2.11.1 // indirect
+)
+
+require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
@@ -51,9 +59,9 @@ require (
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
 	github.com/swaggo/gin-swagger v1.5.2
 	github.com/swaggo/swag v1.8.4
-	github.com/ugorji/go/codec v1.2.9 // indirect
+	github.com/ugorji/go/codec v1.2.10 // indirect
 	golang.org/x/crypto v0.6.0
-	golang.org/x/net v0.6.0 // indirect
+	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect

@@ -1,7 +1,10 @@
 package routers
 
 import (
+	"time"
+
 	"github.com/PIPIKAI/Ins-gin-vue/server/middleware"
+	cache "github.com/chenyahui/gin-cache"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,7 +22,7 @@ func PostGroup(group *gin.RouterGroup) *gin.RouterGroup {
 	r.PUT("/edit/:postid", middleware.AuthMiddleware(), postService.EditByPostID)
 	r.POST("/like", likeService.Like)
 	r.DELETE("/undolike", likeService.UndoLike)
-	r.POST("/likedornot", likeService.LikedOrNot)
+	r.POST("/likedornot", cache.CacheByRequestURI(CacheStore, 2*time.Second), likeService.LikedOrNot)
 	// postRouter.GET("/:id", postController.Show)
 	// postRouter.DELETE("/:id", postController.Delete)
 	// postRouter.POST("/page/list", postController.PageList)
